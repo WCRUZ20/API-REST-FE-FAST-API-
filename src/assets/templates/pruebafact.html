@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factura</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+      } */
+
+      /* .factura {
+        width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      } */
+
+      .info-cliente {
+        display: flex;
+        align-items: flex-start;
+        padding-bottom: 10px;
+        flex-direction: column;
+      }
+
+      .info-cliente img {
+        width: 120px;
+        margin-right: 20px;
+      }
+
+      .emisor {
+        background: #eaeaea;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      /* header {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-bottom: 2px solid #ddd;
+      } */
+      header {
+        display: flex;
+        flex-direction: row;
+        gap: 10rem;
+        justify-content: space-between;
+      }
+
+      .info-adicional {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 5px;
+      }
+
+      .info-factura {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 5px;
+      }
+
+      .cliente {
+        margin: 20px 0;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #eaeaea;
+        color: black;
+        padding: 10px;
+      }
+
+      td {
+        text-align: center;
+        padding: 10px;
+      }
+
+      .pie-documento {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .totales {
+        text-align: right;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin: 20px 0;
+      }
+
+      .resaltado {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="factura">
+      <header>
+        <section class="info-cliente">
+          <img src="{{ logo_url }}" alt="Logo Empresa" />
+          <div class="emisor">
+            <p><strong>Emisor:</strong> {{ company_name }}</p>
+            <p><strong>RUC:</strong> {{ company_ruc }}</p>
+            <p><strong>Matriz:</strong> {{ company_address }}</p>
+            <p><strong>Teléfono:</strong> {{ company_phone }}</p>
+            <p>
+              <strong>Obligado a llevar contabilidad:</strong> {{
+              accounting_required }}
+            </p>
+          </div>
+        </section>
+        <section class="info-factura">
+          <div class="detalle">
+            <p><strong>{{ documento }} No.:</strong> {{ invoice_number }}</p>
+            <p>
+              <strong>Fecha y hora de autorización:</strong> {{
+              authorization_date }}
+            </p>
+            <p><strong>Ambiente:</strong> {{ environment }}</p>
+            <p><strong>Emisión:</strong> {{ issue }}</p>
+          </div>
+          <div class="clave">
+            <p><strong>Número de autorización:</strong></p>
+            <p>{{ authorization_number }}</p>
+            <p><strong>Clave de acceso:</strong></p>
+            <img
+              src="data:image/png;base64,{{ barcode_url }}"
+              alt="Código de barras"
+            />
+          </div>
+        </section>
+      </header>
+
+      <section class="cliente">
+        <p><strong>Razón Social:</strong> {{ client_name }}</p>
+        <p><strong>RUC/CI:</strong> {{ client_ruc }}</p>
+        <p><strong>Dirección:</strong> {{ client_address }}</p>
+        <p><strong>Teléfono:</strong> {{ client_phone }}</p>
+        <p><strong>Correo:</strong> {{ client_email }}</p>
+      </section>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código Principal</th>
+            <th>Cantidad</th>
+            <th>Descripción</th>
+            <th>Precio Unitario</th>
+            <th>Descuento</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in invoice_items %}
+          <tr>
+            <td>{{ item.code }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.description }}</td>
+            <td>${{ item.unit_price }}</td>
+            <td>${{ item.discount }}</td>
+            <td>${{ item.total_price }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <footer class="pie-documento">
+        <section class="info-adicional">
+          <h3>Formas de Pago</h3>
+          <p>
+            <strong>Otros con Utilización del Sistema Financiero:</strong> ${{
+            total_amount }} {{ payment_method }}
+          </p>
+          <p><strong>Fecha:</strong> {{ payment_date }}</p>
+        </section>
+        <section class="totales">
+          <p><strong>Subtotal sin impuestos:</strong> {{ subtotal }}</p>
+          <p><strong>Subtotal 15%:</strong> {{ taxable_subtotal }}</p>
+          <p><strong>IVA 15%:</strong> {{ tax }}</p>
+          <p>
+            <strong>Valor Total:</strong>
+            <span class="resaltado">{{ total_amount }}</span>
+          </p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factura</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+      }
+
+      .factura {
+        width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .info-cliente {
+        display: flex;
+        align-items: flex-start;
+        padding-bottom: 10px;
+        flex-direction: column;
+      }
+
+      .info-cliente img {
+        width: 120px;
+        margin-right: 20px;
+      }
+
+      .emisor {
+        background: #eaeaea;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-bottom: 2px solid #ddd;
+      }
+
+      .info-factura,
+      .cliente,
+      .info-adicional {
+        margin: 20px 0;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #eaeaea;
+        color: black;
+        padding: 10px;
+      }
+
+      td {
+        text-align: center;
+        padding: 10px;
+      }
+
+      .pie-documento {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .totales {
+        text-align: right;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin: 20px 0;
+      }
+
+      .resaltado {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="factura">
+      <header>
+        <section class="info-cliente">
+          <img src="logo.png" alt="Logo Empresa" />
+          <div class="emisor">
+            <p><strong>Emisor:</strong> ZUKALO S A</p>
+            <p><strong>RUC:</strong> 0992560754001</p>
+            <p>
+              <strong>Matriz:</strong> AV FRANCISCO DE ORELLANA TORRE A Y MIGUEL
+              H ALCIVAR
+            </p>
+            <p><strong>Teléfono:</strong> 0963155559 - 0963161127</p>
+            <p><strong>Obligado a llevar contabilidad:</strong> SI</p>
+          </div>
+        </section>
+        <section class="info-factura">
+          <div class="detalle">
+            <p><strong>FACTURA No.:</strong> 001-001-000699469</p>
+            <p>
+              <strong>Fecha y hora de autorización:</strong> 04/01/2025 23:43
+            </p>
+            <p><strong>Ambiente:</strong> PRODUCCIÓN</p>
+            <p><strong>Emisión:</strong> NORMAL</p>
+          </div>
+          <div class="clave">
+            <p><strong>Número de autorización:</strong></p>
+            <p>0301202501099256075400120010010006994694120403016</p>
+            <p><strong>Clave de acceso:</strong></p>
+            <img src="codigo_barras.png" alt="Código de barras" />
+          </div>
+        </section>
+      </header>
+
+      <section class="cliente">
+        <p><strong>Razón Social:</strong> CARVAJAL COLOMA KEVIN DENNIS</p>
+        <p><strong>RUC/CI:</strong> 0956026884001</p>
+        <p>
+          <strong>Dirección:</strong> GUAYAS / DURAN / ELOY ALFARO (DURAN) / AV
+          MONTAÑA VILLA 1 Y NO
+        </p>
+        <p><strong>Teléfono:</strong> 963153351</p>
+        <p><strong>Correo:</strong> dennisco83@hotmail.com</p>
+      </section>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Código Principal</th>
+            <th>Cantidad</th>
+            <th>Descripción</th>
+            <th>Precio Unitario</th>
+            <th>Descuento</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>9700003000191</td>
+            <td>1</td>
+            <td>CONTIFICO - PLAN FACTURACIÓN ELECTRÓNICA 240 DOC ANUAL</td>
+            <td>$51.96</td>
+            <td>$0.00</td>
+            <td>$51.96</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <footer class="pie-documento">
+        <section class="info-adicional">
+          <h3>Formas de Pago</h3>
+          <p>
+            <strong>Otros con Utilización del Sistema Financiero:</strong>
+            $59.75 CREDITO 1 CUOTA
+          </p>
+          <p><strong>Fecha:</strong> 7/1/2025</p>
+        </section>
+        <section class="totales">
+          <p><strong>Subtotal sin impuestos:</strong> $51.96</p>
+          <p><strong>Subtotal 15%:</strong> $51.96</p>
+          <p><strong>IVA 15%:</strong> $7.79</p>
+          <p>
+            <strong>Valor Total:</strong> <span class="resaltado">$59.75</span>
+          </p>
+        </section>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ documento }}</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .seccion-inicial {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start; /* ⬅️ Esto alinea los bloques desde arriba */
+        gap: 20px; /* opcional para separación horizontal */
+      }
+
+      header,
+      .invoice-info,
+      .client-info,
+      .totals {
+        margin-bottom: 20px;
+      }
+
+      .client-info {
+        padding: 10px;
+        border: 1px solid #000;
+      }
+
+      header {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      header .logo img {
+        width: 150px;
+      }
+
+      .company-details {
+        margin: 0;
+        padding: 10px;
+        border: 1px solid #000;
+      }
+
+      .company-details {
+        text-align: left;
+        max-width: 100%;
+        padding: 10px;
+        font-size: 12px; /* Tamaño de fuente más pequeño */
+        border: 1px solid #000;
+        align-content: center;
+      }
+
+      .wrap-text {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-all; /* Fuerza la ruptura de palabras largas */
+        max-width: 100%; /* Limita el ancho máximo del texto */
+        font-size: 10px; /* Ajusta el tamaño de fuente si es necesario */
+      }
+
+      .logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .invoice-info,
+      .client-info {
+        font-size: 12px;
+        margin-top: 10px;
+        border: 1px solid #000;
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .invoice-info div {
+        margin: 5px 0;
+      }
+
+      .client-info p {
+        margin: 1px 0;
+      }
+
+      .invoice-info div {
+        vertical-align: top;
+      }
+
+      .invoice-info img {
+        width: 100%;
+        max-width: 250px;
+        margin-top: 10px;
+      }
+
+      .details table {
+        width: 100%; /* Asegura que la tabla ocupe todo el ancho del contenedor */
+        border-collapse: collapse; /* Colapsa bordes para una apariencia más limpia */
+        margin-top: 0; /* Elimina márgenes adicionales */
+      }
+
+      .details-container {
+        overflow: hidden; /* Asegura que el contenido no salga del recuadro */
+        padding-bottom: 10px;
+        box-sizing: border-box; /* Incluye el padding en el cálculo del ancho */
+      }
+
+      .totals table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .details th,
+      .details td {
+        border: 1px solid #000; /* Borde de 1px */
+        padding: 5px;
+        text-align: center;
+        font-size: 12px; /* Tamaño de fuente más pequeño para caber más datos */
+      }
+
+      .totals {
+        margin-top: 10px;
+      }
+
+      .totals td {
+        border: 1px solid #000; /* Borde de 1px */
+        padding: 5px;
+        padding-right: 10px;
+        font-size: 12px; /* Tamaño de fuente más pequeño para caber más datos */
+      }
+
+      .totals .label {
+        text-align: left;
+      }
+
+      .totals .amount {
+        text-align: right;
+      }
+
+      .additional-info p {
+        margin: 5px 0;
+      }
+
+      .additional-info p:first-child {
+        font-weight: bold;
+      }
+
+      .additional-totals-container {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .additional-info,
+      .totals {
+        width: 48%;
+        font-size: 12px;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="invoice-container">
+      <div class="seccion-inicial">
+        <header>
+          <div class="logo">
+            <img
+              src="data:image/png;base64,{{ logo_url }}"
+              alt="Logo Empresa"
+              style="width: 150px"
+            />
+          </div>
+          <div class="company-details">
+            <p><strong>Emisor:</strong> {{ company_name }}</p>
+            <p><strong>R.U.C.:</strong> {{ company_ruc }}</p>
+            <p>Dirección Matriz: {{ company_address }}</p>
+            <p>Dirección Sucursal:</p>
+            <p>OBLIGADO A LLEVAR CONTABILIDAD: {{ accounting_required }}</p>
+          </div>
+        </header>
+
+        <section class="invoice-info">
+          <div>
+            <p><strong>{{ documento }} No:</strong> {{ invoice_number }}</p>
+            <p><strong>FECHA Y HORA DE AUTORIZACIÓN:</strong></p>
+            <p>{{ authorization_date }}</p>
+            <p><strong>AMBIENTE:</strong> {{ environment }}</p>
+            <p><strong>EMISIÓN:</strong> {{ issue }}</p>
+            <p><strong>NÚMERO DE AUTORIZACIÓN:</strong></p>
+            <p class="wrap-text">{{ authorization_number }}</p>
+            <p><strong>CLAVE DE ACCESO:</strong></p>
+            <img
+              src="data:image/png;base64,{{ barcode_url }}"
+              alt="Código de Barras"
+              class="barcode"
+            />
+          </div>
+        </section>
+      </div>
+
+      <section class="client-info">
+        <p>
+          <strong>Razón Social / Nombres y Apellidos:</strong> {{ client_name }}
+        </p>
+        <p><strong>RUC / CI:</strong> {{ client_ruc }}</p>
+        <p><strong>Fecha Emisión:</strong> {{ issue_date }}</p>
+        <p><strong>Comprobante que se modifica:</strong> Factura {{ factura_relacionada }}</p>
+        <p><strong>Fecha Emisión (Comprobante a modificar):</strong> {{ factura_fecha_emision }}</p>
+        <p><strong>Razón de Modificación:</strong> {{ razon_modificacion }}</p>
+      </section>
+
+      <section class="details">
+        <div class="details-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Código Principal</th>
+                <th>Cantidad</th>
+                <th>Descripción</th>
+                {% if detalle_column_keys %}
+                  {% for key in detalle_column_keys %}
+                    <th>{{ key }}</th>
+                  {% endfor %}
+                {% endif %}
+                <th>Precio Unitario</th>
+                <th>Descuento</th>
+                <th>Precio Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in invoice_items %}
+              <tr>
+                <td>{{ item.code }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.description }}</td>
+                {% if detalle_column_keys %}
+                  {% for key in detalle_column_keys %}
+                    <td>{{ item.additional_details.get(key, '') }}</td>
+                  {% endfor %}
+                {% endif %}
+                <td>{{ item.unit_price }}</td>
+                <td>{{ item.discount }}</td>
+                <td>{{ item.total_price }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="additional-totals-container">
+        <section class="additional-info">
+          <p><strong>INFORMACIÓN ADICIONAL</strong></p>
+          {% for key, value in additional_info.items() %}
+            <p>{{ key }}: {{ value }}</p>
+          {% endfor %}
+        </section>
+
+        <section class="totals">
+          <table>
+            {% for total_item in totals %}
+            <tr>
+              <td class="label">{{ total_item.label }}</td>
+              <td class="amount">{{ total_item.amount }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>
