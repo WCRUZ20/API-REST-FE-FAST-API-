@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 from ..app.controllers.security.user_controller import UserController
 from ..core.security.users.schemas.user_schema import UserCreateModel, DatosFacturacionRegisterModel
 from ..core.security.users.exceptions.user_exception import UserExistsException, DataFacturacionExistsException
+from ..core.security.profiles.exceptions.profile_exception import UnAuthorizedException
 from ..app.middlewares.jwt_bearer import JWTBearer
 
 user_router = APIRouter()
@@ -89,6 +90,18 @@ async def fomulario_datos_facturas(usuario: int = Form(...),
     except UserExistsException as e:
         raise HTTPException(status_code=500, detail={"message": e.detail})
     except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
+@user_router.get("/", tags=[TAG], response_model=dict)
+async def getUsers(user: dict = Depends(jwt_bearer)) -> dict:
+    try:
+        user_controller = UserController()
+        return await user_controller.get_users(user)
+    except UnAuthorizedException as e:
+        raise HTTPException(status_code=403, detail={"message": e.detail})
+    except Exception as e:
+        logging.error(e)
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 """ @user_router.post("/", tags=[TAG], response_model=dict)

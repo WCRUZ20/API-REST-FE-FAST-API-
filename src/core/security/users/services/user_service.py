@@ -2,7 +2,7 @@ import bcrypt
 
 from ..schemas.user_schema import UserCreateModel, DatosFacturacionRegisterModel
 from ...users.exceptions.user_exception import UserExistsException, DataFacturacionExistsException
-from ...profiles.exceptions.profile_exception import ProfileNotFoundException
+from ...profiles.exceptions.profile_exception import ProfileNotFoundException, UnAuthorizedException
 from .....app.middlewares.audit_middleware import ModelAudit
 from .....app.models.model import User, Profile, Datos_Facturacion
 
@@ -69,6 +69,30 @@ class UserService():
 
         return { "message": f"Data de {data_factura.ruc} - {data_factura.razon_social} registrada exitosamente."}
     
+    async def get_users(self, user_info):
+        profile_id = user_info.get('profile_id')
+        if profile_id is None and isinstance(user_info.get('profile'), dict):
+            profile_id = user_info['profile'].get('id')
+
+        if profile_id not in [1, 3]:
+            raise UnAuthorizedException('listar usuarios de sec_users')
+
+        users = await User.all().select_related('profile').values(
+            'id',
+            'identificacion',
+            'usuario',
+            'email',
+            'full_name',
+            'active',
+            'profile_id',
+            'profile__name'
+        )
+
+        return {
+            'message': 'Usuarios obtenidos exitosamente',
+            'data': users
+        }
+
     """ async def create_user(self, user_data: UserCreateModel) -> Dict[str, str]: 
         existing_user = await User.get_or_none(usuario=user_data.usuario)
         if existing_user:

@@ -17,5 +17,8 @@ class UserController():
         auditor_create = await self.audit.audit_for_create_dict(user_create)
         return await UserService(self.db).create_data_facturacion(data_factura, auditor_create)
     
+    async def get_users(self, user_info):
+        return await UserService(self.db).get_users(user_info)
+
     """ async def create_user(self, user: UserCreateModel):
         return await UserService(self.db).create_user(user) """
