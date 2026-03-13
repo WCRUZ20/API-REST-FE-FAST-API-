@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from tortoise import Tortoise
 
 from src.routers.routes import router
+from src.app.middlewares.request_log_middleware import RequestLogMiddleware
 
 import os
 import logging
@@ -43,6 +44,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+app.add_middleware(RequestLogMiddleware)
 
 #Configuracion de Tortoise
 async def init():
