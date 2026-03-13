@@ -21,16 +21,13 @@ def fails_response(e: Exception, status_code: int = 500):
     if status_code == 400:
         codigo_return = 4
 
-    # Manejo seguro del mensaje de error
-    mensaje = getattr(e, 'detail', str(e))
-
     return JSONResponse(
         content={
             "success": False, 
             "data": {
                 "result": {
                     "codigo": codigo_return,
-                    "mensaje": str(mensaje), 
+                    "mensaje": str(e.detail), 
                     "claveAcceso": None
                 }
             }

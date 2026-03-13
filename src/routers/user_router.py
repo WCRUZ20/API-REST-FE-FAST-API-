@@ -7,9 +7,14 @@ from fastapi.encoders import jsonable_encoder
 from typing import Literal, Optional
 from fastapi.responses import JSONResponse
 from ..app.controllers.security.user_controller import UserController
-from ..core.security.users.schemas.user_schema import UserCreateModel, DatosFacturacionRegisterModel
+from ..core.security.users.schemas.user_schema import (
+    UserCreateModel,
+    DatosFacturacionRegisterModel,
+    UserUpdateModel,
+    DatosFacturacionUpdateModel,
+)
 from ..core.security.users.exceptions.user_exception import UserExistsException, DataFacturacionExistsException
-from ..core.security.profiles.exceptions.profile_exception import UnAuthorizedException
+from ..core.security.profiles.exceptions.profile_exception import UnAuthorizedException, ProfileNotFoundException
 from ..app.middlewares.jwt_bearer import JWTBearer
 
 user_router = APIRouter()
@@ -92,7 +97,6 @@ async def fomulario_datos_facturas(usuario: int = Form(...),
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-
 @user_router.get("/", tags=[TAG], response_model=dict)
 async def getUsers(user: dict = Depends(jwt_bearer)) -> dict:
     try:
@@ -118,3 +122,38 @@ async def createUser(userCreate: UserCreateModel) -> dict:
     except Exception as e:
         logging.error(e)
         raise HTTPException(status_code=500, detail="Internal Server Error") """
+
+@user_router.put('/{user_id}', tags=[TAG], response_model=dict)
+async def update_user(user_id: int, user_update: UserUpdateModel, user: dict = Depends(jwt_bearer)) -> dict:
+    try:
+        user_controller = UserController()
+        result = await user_controller.update_user(user_id, user_update, user)
+
+        if result.get('error'):
+            raise HTTPException(status_code=404, detail=result.get('message'))
+
+        return result
+    except UserExistsException as e:
+        raise HTTPException(status_code=400, detail={"message": e.detail})
+    except ProfileNotFoundException as e:
+        raise HTTPException(status_code=404, detail={"message": e.detail})
+    except Exception as e:
+        logging.error(e)
+        raise HTTPException(status_code=500, detail='Internal Server Error')
+
+
+@user_router.put('/{user_id}/data_factura', tags=[TAG], response_model=dict)
+async def update_data_factura(user_id: int, data_update: DatosFacturacionUpdateModel, user: dict = Depends(jwt_bearer)) -> dict:
+    try:
+        user_controller = UserController()
+        result = await user_controller.update_data_factura(user_id, data_update, user)
+
+        if result.get('error'):
+            raise HTTPException(status_code=404, detail=result.get('message'))
+
+        return result
+    except DataFacturacionExistsException as e:
+        raise HTTPException(status_code=400, detail={"message": e.detail})
+    except Exception as e:
+        logging.error(e)
+        raise HTTPException(status_code=500, detail='Internal Server Error')

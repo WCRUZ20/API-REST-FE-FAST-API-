@@ -156,42 +156,20 @@ async def consultar_estado_factura(consulta: ConsultaDocumento, user: dict = Dep
 
 @document_router.get("/downloadxml/{carpeta}/{ruc}/{file_name}", tags=[TAG], response_class=FileResponse)
 async def download_file(file_name: str, ruc: str, carpeta: str):
-    try:
-        # Validar que DIR_BASE existe en configuración
-        if 'DIR_BASE' not in config_env:
-            logging.error("DIR_BASE no configurado en variables de entorno")
-            raise HTTPException(status_code=500, detail="Configuración de servidor incompleta")
-        
-        file_path = config_env['DIR_BASE'] + f'/{carpeta}/{ruc}/{file_name}.xml'
-        if not os.path.exists(file_path):
-            raise HTTPException(status_code=404, detail="Archivo no encontrado")
-        return FileResponse(file_path, media_type='application/xml', filename=f"{file_name}.xml")
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.error(f"Error al descargar archivo XML: {e}")
-        raise HTTPException(status_code=500, detail="Error interno del servidor")
+    file_path = config_env['DIR_BASE'] + f'/{carpeta}/{ruc}/{file_name}.xml'
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+    return FileResponse(file_path, media_type='application/xml', filename=f"{file_name}.xml")
 
 @document_router.get("/viewpdf/{carpeta}/{ruc}/{file_name}", tags=[TAG], response_class=FileResponse)
 async def view_pdf(file_name: str, ruc: str, carpeta: str):
-    try:
-        # Validar que DIR_BASE existe en configuración
-        if 'DIR_BASE' not in config_env:
-            logging.error("DIR_BASE no configurado en variables de entorno")
-            raise HTTPException(status_code=500, detail="Configuración de servidor incompleta")
-        
-        file_path = config_env['DIR_BASE'] + f'/{carpeta}/{ruc}/{file_name}.pdf'
-        if not os.path.exists(file_path):
-            logging.error("Archivo no encontrado")
-            raise HTTPException(status_code=404, detail="Archivo no encontrado")
-        return FileResponse(
-            file_path, 
-            media_type='application/pdf', 
-            filename=f"{file_name}.pdf", 
-            headers={"Content-Disposition": "inline; filename=" + f"{file_name}.pdf"}
-        )
-    except HTTPException:
-        raise
-    except Exception as e:
-        logging.error(f"Error al visualizar archivo PDF: {e}")
-        raise HTTPException(status_code=500, detail="Error interno del servidor")
+    file_path = config_env['DIR_BASE'] + f'/{carpeta}/{ruc}/{file_name}.pdf'
+    if not os.path.exists(file_path):
+        logging.error("Archivo no encontrado")
+        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+    return FileResponse(
+        file_path, 
+        media_type='application/pdf', 
+        filename=f"{file_name}.pdf", 
+        headers={"Content-Disposition": "inline; filename=" + f"{file_name}.pdf"}
+    )
